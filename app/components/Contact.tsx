@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Form, useActionData, useNavigation } from "@remix-run/react";
+import { useFetcher } from "@remix-run/react";
 import MagneticButton from "./MagneticButton";
 import { CONTACT, PRICING } from "~/lib/constants";
 
@@ -11,9 +11,11 @@ type ActionData = {
 
 export default function Contact() {
   const rootRef = useRef<HTMLElement | null>(null);
-  const actionData = useActionData<ActionData>();
-  const nav = useNavigation();
-  const submitting = nav.state === "submitting";
+  // useFetcher submits the form in the background — the page never navigates
+  // away to /api/quote, so the success state can render in place.
+  const fetcher = useFetcher<ActionData>();
+  const actionData = fetcher.data;
+  const submitting = fetcher.state === "submitting";
   const [service, setService] = useState<"smma" | "dev" | "uiux" | "other">(
     "dev",
   );
@@ -45,6 +47,14 @@ export default function Contact() {
     })();
     return () => cleanup();
   }, []);
+
+  // When the submit succeeds, smooth-scroll the Contact card into view so the
+  // "Thank you" state is never missed if the user was looking elsewhere.
+  useEffect(() => {
+    if (actionData?.ok && rootRef.current) {
+      rootRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  }, [actionData?.ok]);
 
   return (
     <section
@@ -115,7 +125,7 @@ export default function Contact() {
           {actionData?.ok ? (
             <SuccessState />
           ) : (
-            <Form method="post" action="/api/quote" className="space-y-5">
+            <fetcher.Form method="post" action="/api/quote" className="space-y-5">
               <input type="hidden" name="service" value={service} />
               <input type="hidden" name="source" value="hero-contact" />
 
@@ -228,7 +238,7 @@ export default function Contact() {
                   </svg>
                 </MagneticButton>
               </div>
-            </Form>
+            </fetcher.Form>
           )}
         </div>
       </div>
