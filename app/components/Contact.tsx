@@ -184,12 +184,18 @@ export default function Contact() {
               />
 
               <div>
-                <Label htmlFor="message">Project brief</Label>
+                <div className="flex items-baseline justify-between gap-3">
+                  <Label htmlFor="message">Project brief</Label>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-ink-500">
+                    Minimum 12 characters
+                  </span>
+                </div>
                 <textarea
                   id="message"
                   name="message"
                   rows={5}
                   required
+                  minLength={12}
                   placeholder="Tell us about your goals, timeline, and any links we should see."
                   className="mt-2 w-full resize-none rounded-2xl border border-ink-950/15 bg-bone-50/60 px-4 py-3 text-base text-ink-950 placeholder:text-ink-400 focus:border-ink-950 focus:bg-bone-50/90 focus:outline-none sm:text-sm"
                 />
@@ -197,7 +203,12 @@ export default function Contact() {
                   <p className="mt-1 text-xs text-red-700">
                     {actionData.fieldErrors.message}
                   </p>
-                ) : null}
+                ) : (
+                  <p className="mt-1 text-xs text-ink-500">
+                    A sentence or two is enough — goals, timeline, anything we
+                    should see.
+                  </p>
+                )}
               </div>
 
               {actionData?.error ? (

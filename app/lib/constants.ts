@@ -10,8 +10,8 @@ export const CONTACT = {
   phoneHref: "tel:+447447491251",
   whatsapp: "447447491251", // E.164 without '+' for wa.me
   whatsappHref: "https://wa.me/447447491251",
-  email: "sales@covalenstudios.com",
-  emailHref: "mailto:sales@covalenstudios.com",
+  email: "sales@covalenstudios.cloud",
+  emailHref: "mailto:sales@covalenstudios.cloud",
   address: "20 Churchill Place, Canary Wharf, London",
   mapHref:
     "https://www.google.com/maps/search/?api=1&query=20+Churchill+Place+Canary+Wharf+London",
