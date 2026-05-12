@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body {
+    @apply bg-bone-50 text-ink-950 antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+
+  ::selection {
+    background: rgba(5, 5, 5, 0.85);
+    color: #f5f1e6;
+  }
+
+  *:focus-visible {
+    outline: 2px solid theme(colors.ink.950);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  GSAP entrance — hide targets BEFORE GSAP's async import runs, so  */
+  /*  there is no flash of visible→hidden when the library snaps the    */
+  /*  element to its FROM state. GSAP then animates them to opacity 1.  */
+  /*                                                                    */
+  /*  No-JS fallback below restores visibility for crawlers / users     */
+  /*  who have JavaScript disabled.                                     */
+  /* ------------------------------------------------------------------ */
+  [data-anim],
+  [data-hero-line],
+  [data-hero-meta],
+  [data-hero-cta],
+  [data-service-card],
+  [data-work-card],
+  [data-contact-anim] {
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  /* Safety net: if GSAP fails to load (network block, etc.), this class
+     is set after a short timeout and reveals all hidden targets. */
+  html.gsap-fallback [data-anim],
+  html.gsap-fallback [data-hero-line],
+  html.gsap-fallback [data-hero-meta],
+  html.gsap-fallback [data-hero-cta],
+  html.gsap-fallback [data-service-card],
+  html.gsap-fallback [data-work-card],
+  html.gsap-fallback [data-contact-anim] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: opacity 0.4s ease-out;
+  }
+
+  /* Respect prefers-reduced-motion: reveal animated targets immediately and
+     neutralize transitions / decorative keyframes so the page feels static. */
+  @media (prefers-reduced-motion: reduce) {
+    [data-anim],
+    [data-hero-line],
+    [data-hero-meta],
+    [data-hero-cta],
+    [data-service-card],
+    [data-work-card],
+    [data-contact-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Frosted card on a light bg — soft inset highlight + warm tint */
+  .glass {
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.75) 0%,
+      rgba(255, 253, 247, 0.55) 100%
+    );
+    border: 1px solid rgba(5, 5, 5, 0.10);
+    backdrop-filter: blur(18px) saturate(130%);
+    -webkit-backdrop-filter: blur(18px) saturate(130%);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.9) inset,
+                0 12px 30px -12px rgba(5, 5, 5, 0.10);
+  }
+
+  .glass-strong {
+    background: rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(5, 5, 5, 0.12);
+    backdrop-filter: blur(24px) saturate(150%);
+    -webkit-backdrop-filter: blur(24px) saturate(150%);
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset,
+                0 16px 40px -14px rgba(5, 5, 5, 0.15);
+  }
+
+  /* Subtle ink-on-paper metallic for display headlines */
+  .text-gradient {
+    background: linear-gradient(
+      120deg,
+      #050505 0%,
+      #2e2e2e 45%,
+      #050505 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 rounded-full
+           bg-ink-950 px-6 py-3 text-sm font-semibold tracking-wide text-bone-50
+           shadow-ink transition-[transform,background-color] duration-200 will-change-transform
+           hover:bg-ink-800 active:scale-[0.97];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           border border-ink-950/20 px-6 py-3 text-sm font-semibold tracking-wide
+           text-ink-950 transition-colors hover:border-ink-950/40 hover:bg-ink-950/[0.06]
+           active:scale-[0.97];
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+}
